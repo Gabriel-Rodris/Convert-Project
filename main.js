@@ -6,6 +6,10 @@ let form = document.querySelector("form")
 let amount = document.getElementById("amount")
 let currency = document.getElementById("currency")
 let footer = document.querySelector("main footer")
+let description = document.getElementById("description")
+let result = document.getElementById("result")
+
+let total = amount * price
 
 amount.addEventListener('input', () => {
   const hasCharactersRegex = /\D+/g
@@ -17,23 +21,36 @@ form.onsubmit = (event) => {
 
   switch (currency.value) {
     case "USD":
-      convertCurrency(amount.value, USD, "US$")
+      convertCurrency(amount.value, USD, "US$", total)
       break
     case "EUR":
-      convertCurrency(amount.value, EUR, "€")
+      convertCurrency(amount.value, EUR, "€", total)
       break
     case "GBP":
-      convertCurrency(amount.value, GBP, "£")
+      convertCurrency(amount.value, GBP, "£", total)
       break
   }
 }
 
-function convertCurrency(amount, price, symbol) {
+function convertCurrency(amount, price, symbol, total) {
   try {
+    description.textContent = `${symbol} 1 = ${formatCurrencyBRL(price)}`
+
+    
+
+    result.textContent = `R$ ${formatCurrencyBRL(total)}`
+
     footer.classList.add("show-result")
   } catch (error) {
     footer.classList.remove("show-result")
     console.log(error)
     alert("Não foi possível converter. Tente novamente mais tarde.")
   }
+}
+
+function formatCurrencyBRL(value) {
+  return Number(value).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  })
 }
